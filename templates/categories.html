@@ -1,0 +1,51 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+
+	<div class="flexbox-container">
+		<div class="col-md-5 padding-none">
+
+		</div>
+		<div class="col-md-6"></div>
+		<div class="col-md-1"></div>
+	</div>
+	<div class="flexbox-container">
+		<div class="col-md-4">
+			<div>
+				<h3>
+					All Categories
+					<div class="glyphicon glyphicon-circle-arrow-down"></div>
+					{% if 'username' in session %}
+						<a href="{{url_for('newCategory')}}">
+							<button class="btn btn-default" id="new-restaurant">
+								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add New
+							</button>
+						</a>
+					{% endif %}
+
+
+				</h3>
+			</div>
+			{% for category in categories %}
+				<a href="{{url_for('showItem', category_id = category.id)}}">
+					<div class="category-list rounded">
+						<h3>{{category.name}}</h3>
+					</div>
+				</a>
+			{% endfor %}
+		</div>
+		<div class="col-md-1"></div>
+		<div class="col-md-5">
+			<div><h3>Items Recently added <div class="glyphicon glyphicon-circle-arrow-down"></div></h3></div>
+			{% for item in items %}
+				<a href = "{{url_for('showItem', category_id = item.category_id)}}">
+					<div class="item-list rounded">
+						<h3>{{item.name}} ({{item.category.name}}) </h3>
+					</div>
+				</a>
+			{% endfor %}
+		</div>
+		<div class="col-md-2"></div>
+	</div>
+
+{% endblock %}

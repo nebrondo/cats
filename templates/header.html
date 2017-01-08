@@ -1,0 +1,40 @@
+<div class="flexbox-container top-menu">
+	<div class="col-md-6">
+		<a href="{{url_for('showCategories')}}">
+			<span class="glyphicon glyphicon-home" aria-hidden="true"></span>Show All Categories
+		</a>
+	</div>
+	<div class="col-md-2 text-right">
+
+	</div>
+
+    <div class="col-md-4 text-right">
+            {% if 'username' not in session %}
+                <a href="{{url_for('showLogin')}}">Click here to login</a>
+            {% else %}
+                <img src="{{ env.currentUser.picture}}" width="30px" height="30px">
+                {{ env.currentUser.name }}
+                <a href="{{url_for('disconnect')}}">Disconnect</a>
+            {% endif %}
+        </figure>
+    </div>
+</div>
+<div class="flexbox-container">
+        <div class="col-md-4 banner main"></div>
+        <div class="col-md-8">
+            <h1>{{ env.title }}</h1>
+        </div>
+
+</div>
+<div class = 'flash'>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+
+        <ul>
+        {% for message in messages %}
+            <li> <strong> {{ message }} </strong> </li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+</div>
