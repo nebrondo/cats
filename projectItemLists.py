@@ -31,7 +31,7 @@ session = DBSession()
 class Env:
     def __init__(self,title=None):
         if 'email' in login_session:
-          self.__currentUser = getUserInfo(login_session['email'])
+          self.__currentUser = login_session
         else:
           self.__currentUser = []
         if title:
@@ -54,7 +54,7 @@ class Env:
     def currentUser(self):
         return self.__currentUser
     @currentUser.setter
-    def creator(self, currentUser):
+    def currentUser(self, currentUser):
         self.__currentUser = currentUser
 
 
@@ -63,8 +63,8 @@ class Env:
 def showLogin():
   state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
   login_session['state'] = state
-  env = Env("Login To Categories website")
-  return render_template('login.html',STATE=state,env=Env)
+  env = Env("Login Page")
+  return render_template('login.html',STATE=state,env=env)
 
 @app.route('/fbconnect',methods=['POST'])
 def fbconnect():
@@ -98,14 +98,16 @@ def fbconnect():
   user_id = getUserID(login_session['email'])
   if not user_id:
     user_id = createUser(login_session)
+  else:
+    updateUser(login_session)
   login_session['email']=user_id
   output = ''
-  output += '<h1>Welcome, '
+  output += 'Welcome, '
   output += login_session['username']
-  output += '!</h1>'
+  output += '!'
   output += '<img src="'
   output += login_session['picture']
-  output += '" style="width:300px;height:300px;border-radius:150px;-webkit-border-radius:150px;-moz-border-radius:150px;">'
+  output += '"  style="width:50px;height:50px;border-radius:10px;-webkit-border-radius:10px;-moz-border-radius:10px;">'
   flash("You are now logged in as %s" % login_session['username'])
   return output
 
@@ -174,17 +176,18 @@ def gconnect():
 
   if not user_id:
     user_id = createUser(login_session)
-
+  else:
+    updateUser(login_session)
   login_session['user_id'] = user_id
 
 
   output = ''
-  output += '<h1>Welcome, '
+  output += 'Welcome, '
   output += login_session['username']
-  output += '!</h1>'
+  output += '!'
   output += '<img src="'
   output += login_session['picture']
-  output += ' style="width:300px;height:300px;border-radius:150px;-webkit-border-radius:150px;-moz-border-radius:150px;">'
+  output += '" style="width:50px;height:50px;border-radius:10px;-webkit-border-radius:10px;-moz-border-radius:10px;">'
   flash("You are now logged in as %s" % login_session['username'])
   return output
 
@@ -403,7 +406,10 @@ def getUserID(email):
 
 
 def getUserInfo(user_id):
-  user = session.query(User).filter_by(email = user_id).one()
+  try:
+    user = session.query(User).filter_by(email = user_id).one()
+  except:
+    user = None
   return user
 
 
@@ -414,6 +420,12 @@ def createUser(login_session):
   user = session.query(User).filter_by(email=login_session['email']).one()
   return user.email
 
+def updateUser(login_session):
+  user = User(name = login_session['username'], email = login_session['email'],picture=login_session['picture'])
+  user.picture = login_session['picture']
+  #session.add(user)
+  session.commit()
+  return
 
 
 if __name__ == '__main__':
