@@ -17,8 +17,8 @@ RUNNING THE APPLICATION
 
 Examples for accessing the web services:
 
-a. http://localhost:5000/category/2/item/JSON
-b. http://localhost:5000/category/JSON
-c. http://localhost:5000/item/1/JSON
-d. http://localhost:5000/allitems/JSON
-e. http://localhost:5000/user/JSON
+1. http://localhost:5000/category/2/item/JSON
+2. http://localhost:5000/category/JSON
+3. http://localhost:5000/item/1/JSON
+4. http://localhost:5000/allitems/JSON
+5. http://localhost:5000/user/JSON
