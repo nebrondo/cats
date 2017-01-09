@@ -1,7 +1,7 @@
 {% extends "main.html" %}
 {% block content %}
 {% include "header.html" %}
-
+	<h1>Category: {{category.name}}</h1>
 	{% if 'username' in session %}
 	<div class="row padding-top padding-bottom">
 		<div class="col-md-1"></div>
@@ -32,13 +32,13 @@
 			<div class="col-md-3">
 				<h2>Items</h2>
 					{% for i in items %}
-							<div class="item-list rounded">
-								<h3>{{i.name}}</h3>
-								{% if 'username' in session %}
-								<a href='{{url_for('editItem', category_id = i.category_id, item_id=i.id ) }}'>Edit</a> |
-								<a href='{{url_for('deleteItem', category_id = i.category_id, item_id=i.id ) }}'>Delete</a>
-								{% endif %}
-							</div>
+						<div class="item-list rounded">
+							<h3>{{i.name}}</h3>
+							{% if 'username' in session %}
+							<a href='{{url_for('editItem', category_id = i.category_id, item_id=i.id ) }}'>Edit</a> |
+							<a href='{{url_for('deleteItem', category_id = i.category_id, item_id=i.id ) }}'>Delete</a>
+							{% endif %}
+						</div>
 					{% endfor %}
 			</div>
 
