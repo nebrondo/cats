@@ -16,14 +16,15 @@ import httplib2
 import json
 from flask import make_response
 import requests
-
+import os
+dir_path = os.path.dirname(os.path.realpath(__file__))
 app = Flask(__name__)
-CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())[
+CLIENT_ID = json.loads(open(dir_path+'/client_secrets.json', 'r').read())[
     'web']['client_id']
 APPLICATION_NAME = "Items by Category App"
 
 # Connect to Database and create database session
-engine = create_engine('sqlite:///items.db')
+engine = create_engine('postgresql:///items')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
@@ -82,8 +83,8 @@ def showLogin():
                     for x in xrange(32))
     login_session['state'] = state
     env = Env("Login Page")
+    # return render_template(dir_path+'/templates/login.html', STATE=state, env=env)
     return render_template('login.html', STATE=state, env=env)
-
 
 def login_required(f):
     """
@@ -139,9 +140,9 @@ def fbconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
     access_token = request.data
-    app_id = json.loads(open('fb_client_secrets.json', 'r').read())[
+    app_id = json.loads(open(dir_path+'/fb_client_secrets.json', 'r').read())[
         'web']['app_id']
-    app_secret = json.loads(open('fb_client_secrets.json', 'r').read())[
+    app_secret = json.loads(open(dir_path+'/fb_client_secrets.json', 'r').read())[
         'web']['app_secret']
     url = 'https://graph.facebook.com'
     url += '/oauth/access_token?grant_type=fb_exchange_token'
@@ -199,7 +200,7 @@ def gconnect():
     # request.get_data()
     code = request.data  # .decode('utf-8')
     try:
-        oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
+        oauth_flow = flow_from_clientsecrets(dir_path+'/client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentals = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
@@ -599,7 +600,7 @@ def editItem(category_id, item_id):
             return redirect(url_for('showItem', category_id=category_id))
         else:
             env = Env("Edit Item")
-            return render_template('edititem.html',
+            return render_template('editItem.html',
                                    category_id=category_id,
                                    item=editedItem, env=env)
     else:
@@ -686,4 +687,4 @@ def createUser(login_session):
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
     app.debug = True
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=80)
